@@ -8,34 +8,17 @@ public class Animal extends Entity
 
     // /////////////////
     // Contructora
-
-
-    public Animal(String species) {
-        super();
-        this.species = species;
-    }
-
-    // Full Constructor
-    public Animal(String species, int id, String name)
+    public Animal(int id, /*String name,*/ String species)
     {
-        super(id, name);
-        this.species = species;
-    }
-
-    public Animal(int id, String name, String species)
-    {
-        super(id, name);
+        super(id, "ANIMAL");
         this.species = species;
     }
 
 
     // ///////////////////
     // Getters and Setters
-
-
-    // String species
-    public  String getSpecies() {return species;}
-    public   void setSpecies(String species) {this.species = species;}
+    public  String GetSpecies() {return species;}
+    public   void SetSpecies(String species) {this.species = species;}
 
 
 
@@ -54,6 +37,6 @@ public class Animal extends Entity
         return super.GetDescription();
     }
     @Override
-    public String GetCSV(){return getId() + "," + name + "," + species;}
+    public String GetCSV(){return GetId() + "," + name + "," + species;}
 
 }

@@ -9,44 +9,48 @@ import java.util.Scanner;
 
 public class Farm
 {
-    // This is the text that makes up the main menu.
+    // ////////////////////////////////////////////
+    // This is the text that goes into the menus.
     String[] mainMenu = {"View crops", "Remove crop", "Add crop", "View animals", "Add animal", "Feed animal", "Remove animal", "Save", "Exit"};
+    String[] cropMenu1 = {"Add crop", "Exit"};
+
 
     boolean animalAdded = false;
+    int nextID;
+
 
     // /////////////////////////////////////
     // Our crops and animals are stored here
-    ArrayList <Crop> listOfCrops = new ArrayList<>();
-    ArrayList <Animal> listOfAnimals = new ArrayList<>();
-//    ArrayList <Entity> listOfEntities = new ArrayList<>();
+    ArrayList <Crop> listOfCrops = new ArrayList<>();       //   Crops: listOfCrops
+    ArrayList <Animal> listOfAnimals = new ArrayList<>();   // Animals: listOfAnimals
+
 
 
 
     // ///////////////////////
-    // Files and tribulations.
-    File sourceFolder = new File("myLittleFolder");
-    File sourceFileCrops = new File("myLittleFolder/Crops.txt");
-    File sourceFileAnimals = new File("myLittleFolder/Animals.txt");
-    File sourceFileEntities = new File("myLittleFolder/FarmContent.txt");
+    // Variables dealing with I/O (paths & filenames).
+    File sourceFolder = new File("myLittleFolder"); // The source-folder from where the files will be Saved/Loaded
+    File sourceFileCrops = new File("myLittleFolder/Crops.txt"); // Filename of the Crops-file
+    File sourceFileAnimals = new File("myLittleFolder/Animals.txt"); // Filename of the Animals-file
 
 
 
 
     // /////////////////
-    // Contructora
+    // Contructors
 
     // Empty Constructor
     public Farm()
     {
-        // TODO - check if file exists - if not, then make something up to populate the arraylist(s)
-        if(!sourceFileCrops.exists()){}
-        //listOfEntities.add(new Crop().set);
+        // Check if file exists - if not, then make something up to populate the arraylist(s)
+        if(!sourceFileCrops.exists())
+        {
+            DebugFillCrops();
+            DebugFillAnimals();
+        }
     }
 
 
-
-    // //////
-    // Others
 
 
     // ////
@@ -59,25 +63,19 @@ public class Farm
 
 
 
+        // //////////////////////////
+        // The Main-Loop starts Here!
         while(keepLooping)
         {
-
-            // Display the Main menu
-            menuPrintLine1();
-            menuPrintItems(mainMenu);
-            menuPrintLine1();
-
-            // Ask for user input
-            userInput = GetInt("");
-            //if(userInput < 1 || userInput > mainMenu.length){ continue; }
-            menuPrintLine2();
+            menuPrintItems(mainMenu);   // Display the Main menu
+            userInput = GetInt(""); // Ask for user input
 
 
             switch(userInput)
             {
                 case 1: ViewCrops(); break;
                 case 2: RemoveCrop(); break;
-                case 3: //AddCrop(); break;
+                case 3: AddCrop(); break;
                 case 4: ViewAnimals(); break;
                 case 5: //animalAdded = AddAnimal(); break;
                 case 6: FeedAnimal(); break;
@@ -88,23 +86,84 @@ public class Farm
 
             } // switch(userInput)
 
-            menuPrintLine2();
+            menuPrintLine2();           // ---------------------
         } // main while-loop
 
-    }
+    } // MainMenu()
 
 
     private void ViewCrops(){}
 
     private void RemoveCrop(){}
 
-    //private void AddCrop(String typeOfCrop, int amountOfCrop){listOfEntities.add(new Crop(NextID(),"FEED", typeOfCrop, amountOfCrop));}
-    private void AddCrop(String typeOfCrop, int amountOfCrop){listOfEntities.add(new Entity(NextID(),"FEED", typeOfCrop, amountOfCrop));}
+
+    // Add Crop - The quick and easy version
+    private void AddCrop(String typeOfCrop, int amountOfCrop)
+    {
+        NextID();
+        Crop newCrop = new Crop(nextID, "CROP", typeOfCrop, amountOfCrop);
+        listOfCrops.add(newCrop);
+
+    }
+
+
+    // Add Crop - The interactive version
+        private void AddCrop()
+    {
+        int foundCrop = -1;
+        int userInput = 0;
+        String inputCropType = "";
+        int inputCropQuantity = 0;
+
+
+
+        // /////////
+        // Crop menu                       // 1 Add crop, 2 Exit
+        menuPrintItems(cropMenu1);         // Display the Crop menu
+        userInput = GetInt("");     // Ask for user input
+        if(userInput!=1){return;}          // Invalid answer or user chose Exit
+
+
+        // Ask which crop
+        inputCropType=GetString("Name the crop: ");
+        if(inputCropType==""){return;}                       // Fail. User gave no answer.
+
+
+        // Ask how much
+        inputCropQuantity=GetInt("Enter amount: ");
+        if(inputCropQuantity < 1) {return;}                    // Fail. User is a comedian.
+
+
+        // Does the crop already exist?
+        for(int i=0;i<listOfCrops.size();i++)
+        {
+            if(listOfCrops.get(i).getCropType().toLowerCase().equals(inputCropType)){foundCrop = i; break;}
+        }
+
+
+        if(foundCrop < 0) // Add new crop
+        {
+            NextID();
+            Crop newCrop = new Crop(nextID, "CROP", inputCropType, inputCropQuantity);
+            listOfCrops.add(newCrop);
+        }
+        else // Update crop quantity
+        {
+            int revisedQuantity = listOfCrops.get(foundCrop).getQuantity();
+            listOfCrops.get(foundCrop).setQuantity(revisedQuantity + inputCropQuantity);
+        }
+
+
+        // Add to list
+    }
+
     private void ViewAnimals(){}
 
     private boolean AddAnimal(String typeOfAnimal)
     {
-        listOfEntities.add(new Animal(NextID(),"ANIMAL", typeOfAnimal ));
+        NextID();
+        Animal newAnimal = new Animal(nextID, typeOfAnimal);
+        listOfAnimals.add(newAnimal);
         return true;
     }
 
@@ -116,14 +175,16 @@ public class Farm
     private void Save()
     {
         String thisLine="";
-        File saveFolder = new File("MyLittleFolder"); // Local path
-        if(!saveFolder.exists()){saveFolder.mkdir();} // Making sure the folder exists.
 
 
         try
         {
             FileWriter filewriter = new FileWriter(sourceFileCrops);
             BufferedWriter bf = new BufferedWriter(filewriter);
+
+            File saveFolder = new File("MyLittleFolder"); // Local path
+            if(!saveFolder.exists()){saveFolder.mkdir();} // Making sure the folder exists.
+
             {
                 //TODO write two files - Crops and Animals
             }
@@ -189,8 +250,8 @@ public class Farm
 
 
 
-    // //////////////////////////////////////////
-    // These functions are being used by the menu
+    // ///////////////////////////////////////////
+    // These functions are being used by the menus
 
     private void menuPrintLine1(){System.out.println("=======================================");}
     private void menuPrintLine2(){System.out.println("---------------------------------------");}
@@ -198,43 +259,52 @@ public class Farm
     private void menuPrintItems(String[] menuItems)
     {
         int menuIndex = 1;
+        menuPrintLine1();           // =====================
         for(String item : menuItems)
         {
             System.out.println(" " + menuIndex + " " + item);
             menuIndex++;
         }
+        menuPrintLine1();           // =====================
     }
 
 
 
     // If there are no files to read, then we'll fill the barn with stuff
-    private void debugFillCrops()
+    private void DebugFillCrops()
     {
-        AddCrop("Crop 1", 3);
-        AddCrop("Crop 2", 6);
-        AddCrop("Crop 3", 5);
-        AddCrop("Crop 4", 4);
-        AddCrop("Crop 5", 7);
-        AddCrop("Crop 6", 2);
+        AddCrop("Hay", 30);
+        AddCrop("Walnuts", 60);
+        AddCrop("Rye", 54);
+        AddCrop("Seeds", 46);
     }
+
+    private void DebugFillAnimals()
+    {
+        AddAnimal("Horse");
+        AddAnimal("Squirrel");
+        AddAnimal("Chicken");
+        AddAnimal("Giraffe");
+    }
+
+
+
 
 
     public void InitializeNextID()
     {
         int theID = 0;
 
-        try{theID += listOfEntities.size();}
+        try{theID = listOfCrops.size() + listOfAnimals.size();}
         catch (Exception e) {DoNothing();}
-
         this.nextID = theID;
     }
 
-
-
-    private void debugFillAnimals()
+    public int NextID()
     {
-        AddAnimal("Hippogriff");
+        return this.nextID++;
     }
+
 
 
 }

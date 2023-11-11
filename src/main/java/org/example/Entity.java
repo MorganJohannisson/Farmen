@@ -3,7 +3,7 @@ package org.example;
 public class Entity
 {
     private int id;
-    int nextID = -1;
+
     protected String name = "";
 
 
@@ -11,23 +11,10 @@ public class Entity
     // /////////////////
     // Contructora
 
-    // Empty Constructor
-
-
-    // Full Constructor
-    public Entity(int id, String name, String theCrop, int theQuantity)
+    public Entity(int id, String name)
     {
-
         this.id = id;
         this.name = name;
-
-
-    }
-
-
-
-
-    public Entity() {
 
     }
 
@@ -36,12 +23,12 @@ public class Entity
     // Getters and Setters
 
     // int id
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    public int GetId() {return id;}
+    public void SetId(int id) {this.id = id;}
 
     // String name
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
+    public String GetName() {return name;}
+    public void SetName(String name) {this.name = name;}
 
 
 
@@ -56,13 +43,7 @@ public class Entity
 
         return "";
     }
-    public String GetCSV(){return getId() + "," + name;}
+    public String GetCSV(){return GetId() + "," + name;}
 
-
-    public int NextID()
-    {
-        this.nextID++;
-        return this.nextID;
-    }
 
 }

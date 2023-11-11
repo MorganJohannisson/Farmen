@@ -10,19 +10,28 @@ public class Crop extends Entity
     // Contructora
 
     // Empty Constructor
-    //public Crop() {}
+    // public Crop() {}
 
-    // Full Constructor
-    public Crop(int id, String name, String cropType, int quantity) {
-        super(id, name);
+    // Full Constructor(s)
+    public Crop(int id, String name, String cropType, int quantity)
+    {
+        super(id,"FEED");
+        this.cropType = cropType;
+        this.quantity = quantity;
+    }
+
+    public Crop(int id, /*String name,*/ String cropType, int quantity)
+    {
+        super(id, "FEED");
         this.cropType = cropType;
         this.quantity = quantity;
     }
 
 
+
+
     // ///////////////////
     // Getters and Setters
-
 
     // String cropType
     public String getCropType() {return cropType;}
@@ -34,8 +43,9 @@ public class Crop extends Entity
 
 
 
-    // Others
 
+    // //////
+    // Others
 
     @Override
     public String GetDescription()
@@ -43,6 +53,6 @@ public class Crop extends Entity
         return super.GetDescription();
     }
     @Override
-    public String GetCSV(){return getId() + "," + name + "," + cropType + "," + quantity;}
+    public String GetCSV(){return GetId() + "," + name + "," + cropType + "," + quantity;}
 
 }
