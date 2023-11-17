@@ -4,26 +4,24 @@ public class Animal extends Entity
 {
     private String species;
 
-
-
     // /////////////////
     // Contructora
-    public Animal(int id, /*String name,*/ String species)
-    {
-        super(id, "ANIMAL");
-        this.species = species;
+
+    public Animal(int id, String name, String species) {
+        super(id, name);
+        setSpecies(species);
     }
 
 
     // ///////////////////
     // Getters and Setters
-    public  String GetSpecies() {return species;}
-    public   void SetSpecies(String species) {this.species = species;}
+    public  String getSpecies() {return species;}
+    public   void setSpecies(String species) {this.species = species;}
 
 
 
-    // //////
-    // Others
+    // /////////
+    // Functions
 
     public void feed(Crop crop)
     {
@@ -31,12 +29,16 @@ public class Animal extends Entity
 
     }
 
-    @Override
+
     public String GetDescription()
     {
-        return super.GetDescription();
+        return super.GetDescription() + ", '" + getSpecies() + "'";
+        //return super.GetDescription() + ", species: '" + getSpecies() + "'";
+        //return super.GetDescription() + " " + getSpecies();
     }
+
+    // + animal.getSpecies().toString()
     @Override
-    public String GetCSV(){return GetId() + "," + name + "," + species;}
+    public String GetCSV(){return getId() + "," + getName() + "," + getSpecies();}
 
 }

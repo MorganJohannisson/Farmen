@@ -1,0 +1,4 @@
+1,Grass,Hay,29
+2,Nuts,Walnuts,60
+3,Meat,Dragon T-bone steak,44
+7,Beans,Beans,123

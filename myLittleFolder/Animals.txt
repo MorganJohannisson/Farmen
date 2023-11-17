@@ -1,0 +1,5 @@
+4,Workhorse,Horse
+5,Pest-control,Cat
+6,Mount,Hippogriff
+8,frog,Kermit
+9,magical creature,Grindylow
