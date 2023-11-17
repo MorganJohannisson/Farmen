@@ -226,7 +226,7 @@ några fler för det fanns inga.*/
         String inputCropType = "";
         int inputCropQuantity = 0;
 
-        //ViewCrops();
+        ViewCrops();
 
         // CropMenu with user-input:
         // Step 1  - Ask user which crop and how much
@@ -400,7 +400,7 @@ några fler för det fanns inga.*/
     {
         if(readCrops)   // Let's read the crops-file
         {
-            System.out.print("\nAdding crops: ");
+            System.out.println("\nAdding crops.");
             try
             {
                 String currentLine = "";
@@ -423,7 +423,7 @@ några fler för det fanns inga.*/
                             String cType = cropVariables[2];
                             int cQuantity = Integer.parseInt(cropVariables[3]);
                             AddCrop(cID, cName, cType, cQuantity );
-                            System.out.print("'" + cType + "' ");
+                            System.out.println("Added '" + cType + "'");
                         }
 
                     }
@@ -443,7 +443,7 @@ några fler för det fanns inga.*/
         ///////////////////////
         if(readAnimals)
         {
-            System.out.println("Adding animals: ");
+            System.out.println("Adding animals.");
             try
             {
                 String currentLine = "";
@@ -466,7 +466,7 @@ några fler för det fanns inga.*/
                             String cSpecies = animalVariables[2];
                             if(AddAnimal(cID, cName, cSpecies))
                             {
-                                System.out.println("'" + cSpecies + "' ");
+                                System.out.println("Added '" + cSpecies + "'");
                             }
                         }
 
