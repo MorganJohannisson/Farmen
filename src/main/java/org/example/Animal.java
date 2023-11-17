@@ -26,7 +26,15 @@ public class Animal extends Entity
     public void feed(Crop crop)
     {
         // TODO: inform user that the animals are being/have been fed
-
+        if(crop.getQuantity()>0)
+        {
+            crop.setQuantity(crop.getQuantity() - 1);
+            System.out.println("The animal successfully ate some food.");
+        }
+        else
+        {
+            System.out.println("Your animal is disappointed, because there was no food left to feed it with.");
+        }
     }
 
 

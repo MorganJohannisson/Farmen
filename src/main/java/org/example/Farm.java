@@ -93,7 +93,7 @@ public class Farm
                 case 4: System.out.println("  View animals"); ViewAnimals(); break;
                 case 5: System.out.println("  Add animal");   AddAnimalMenu(); break;
                 case 6: System.out.println("  Remove animal");RemoveAnimal(); break;
-                case 7: System.out.println("  Feed animal");  FeedAnimalMenu(); break;
+                case 7: System.out.println("  Feed animal");  FeedAnimal(); break;
                 case 8: System.out.println("  Save");         Save(); break;
                 case 0: System.out.println("  Exit");         keepLooping = false; break;
                 default: System.out.println("  Try again");   DoNothing(); break;
@@ -114,7 +114,47 @@ valda Animals Feed-funktion, där quantity av hur många av den Crop som finns m
 det inte finns några (crop quantity är 0) så bör ett meddelande skrivas ut att det inte gick att äta
 några fler för det fanns inga.*/
 
-    private void FeedAnimal(int listIndexCrop, int listIndexAnimal)
+
+    private void FeedAnimal()
+    {
+        System.out.println("\n\n  Feeding an animal\n");
+
+        int listIndexCrop = -1;     // The index (in the arraylist) of the
+        int listIndexAnimal = -1;   //  crop and animal respectively.
+        Crop selectedCrop = null;
+        Animal selectedAnimal = null;
+        int userInput = 0;          // User-input is being stored here
+        int selectedCropID;
+        int selectedAnimalID;
+
+
+        ViewAnimals();
+        // Let's find that crop - and exit if there's no crop left, or if the user is being silly
+        selectedCropID = AskForInt("Pick a crop by its ID: ");
+
+        // Check if the ID exists
+        for(Crop c : listOfCrops) {if(c.getId()==selectedCropID){selectedCrop = c; } }
+        if(selectedCrop.equals(null)) {System.out.println("\nNo crop with that ID exists.\n\n"); return;}
+
+
+        // Let's pick the animal - and exit if the user is not cooperating
+        selectedAnimalID = AskForInt("Pick an animal by its ID: ");
+
+        // Check if the ID exists
+        for(Animal a : listOfAnimals) {if(a.getId()==selectedAnimalID){selectedAnimal = a; } }
+        if(selectedAnimal.equals(null)){System.out.println("\nNo animal with that ID exists.\n\n"); return;}
+
+
+        //If we're here, then we have everything we need to attempt to feed an animal
+        selectedAnimal.feed(selectedCrop);
+
+    }
+
+
+
+
+    //////////////////////////////////////////////////////
+    /*    private void FeedAnimal(int listIndexCrop, int listIndexAnimal)
     {
         int amountOfCrop = listOfCrops.get(listIndexCrop).getQuantity(); // This variable will help declutter the code for decreasing the feed
         if(amountOfCrop < 1) {System.out.println("\nThat particular feed is out of stock.\n\n"); return;}
@@ -138,6 +178,7 @@ några fler för det fanns inga.*/
         int userInput = 0;          // User-input is being stored here
 
 
+        ViewAnimals();
         // Let's find that crop - and exit if there's no crop left, or if the user is being silly
         userInput = AskForInt("Pick a crop by its ID: ");
 
@@ -157,7 +198,12 @@ några fler för det fanns inga.*/
         //If we're here, then we have everything we need to attempt to feed an animal
         FeedAnimal(listIndexCrop, listIndexAnimal);
 
-    }
+    }*/
+    //////////////////////////////////////////////////////
+
+
+
+
     private void RemoveAnimal()
     {
         ViewAnimals();
