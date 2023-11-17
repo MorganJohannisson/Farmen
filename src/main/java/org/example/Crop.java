@@ -8,7 +8,7 @@ public class Crop extends Entity
 
 
     // /////////////////
-    // Contructora
+    // Contructors
 
     public Crop(int id, String name, String cropType, int quantity)
     {

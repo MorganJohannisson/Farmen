@@ -9,7 +9,7 @@ public class Entity
 
 
     // /////////////////
-    // Contructora
+    // Contructors
 
     public Entity(int id, String name)
     {

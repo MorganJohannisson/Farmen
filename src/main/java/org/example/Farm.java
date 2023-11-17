@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Farm
 {
-    // ////////////////////////////////////////////
+    // ///////////////////////////////////////////
     // This is the text that goes into the menus.
     String mainMenu = "1 View crops\n2 Add crop\n3 Remove crop\n4 View animals\n5 Add animal\n6 Remove animal\n7 Feed animal\n8 Save\n0 Exit";
 
@@ -40,7 +40,7 @@ public class Farm
         {
             // There are no crops to read, so we'll just fill the farm with some stuff
             System.out.print("No crop-file detected - filling the farm with default crops...");
-            AddCrop(1, "Grass", "Hay", 30);
+            AddCrop(1, "Grass", "Hay", 1);
             AddCrop(2, "Nuts", "Walnuts", 60);
             AddCrop(3, "Meat", "Dragon T-bone steak", 44);
             System.out.println("Done.");

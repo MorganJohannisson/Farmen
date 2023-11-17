@@ -5,7 +5,7 @@ public class Animal extends Entity
     private String species;
 
     // /////////////////
-    // Contructora
+    // Contructors
 
     public Animal(int id, String name, String species) {
         super(id, name);
