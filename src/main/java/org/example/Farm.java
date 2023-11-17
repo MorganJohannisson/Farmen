@@ -84,19 +84,19 @@ public class Farm
             printLine1();
 
             userInput = AskForInt(""); // Ask for user input
-            // System.out.println("\n\n");
+            System.out.println("\n");
             switch(userInput)
             {
-                case 1: ViewCrops(); break;
-                case 2: AddCropMenu(); break;
-                case 3: RemoveCrop(); break;
-                case 4: ViewAnimals(); break;
-                case 5: AddAnimalMenu(); break;
-                case 6: RemoveAnimal(); break;
-                case 7: FeedAnimalMenu(); break;
-                case 8: Save(); break;
-                case 0: keepLooping = false; break;
-                default: DoNothing(); break;
+                case 1: System.out.println("  View crops");   ViewCrops(); break;
+                case 2: System.out.println("  Add crop");     AddCropMenu(); break;
+                case 3: System.out.println("  Remove crop");  RemoveCrop(); break;
+                case 4: System.out.println("  View animals"); ViewAnimals(); break;
+                case 5: System.out.println("  Add animal");   AddAnimalMenu(); break;
+                case 6: System.out.println("  Remove animal");RemoveAnimal(); break;
+                case 7: System.out.println("  Feed animal");  FeedAnimalMenu(); break;
+                case 8: System.out.println("  Save");         Save(); break;
+                case 0: System.out.println("  Exit");         keepLooping = false; break;
+                default: System.out.println("  Try again");   DoNothing(); break;
             } // switch(userInput)
         } // main while-loop
 
@@ -105,19 +105,9 @@ public class Farm
 
     private void DoNothing(){} // This place-holder function is basically a better alternative to a blank line.
 
-    private void ViewCrops()
-    {
-        System.out.println("  View crops");
-        for(Crop c : listOfCrops) {System.out.println(c.GetDescription());}
+    private void ViewCrops() { for(Crop c : listOfCrops) {System.out.println(c.GetDescription());} }
 
-    }
-
-    private void ViewAnimals()
-    {
-        System.out.println("  View animals");
-        for(Animal a : listOfAnimals) {System.out.println(a.GetDescription());}
-
-    }
+    private void ViewAnimals() { for(Animal a : listOfAnimals) {System.out.println(a.GetDescription());} }
 
 /*I FeedAnimal skall användaren först välja en Crop och sedan en Animal. Skicka in denna Crop till den
 valda Animals Feed-funktion, där quantity av hur många av den Crop som finns minskas med 1. Om
@@ -139,7 +129,6 @@ några fler för det fanns inga.*/
         // This function gathers information from the user, which is used in a call to
         //  the FeedAnimal(int, int) function.
 
-        System.out.println("  Feed animal");
         System.out.println("\n\nFeeding an animal:\n" +
                 "You'll need to pick a crop and an animal using their ID.\n" +
                 "(Make use of the View-functions in the main menu)");
@@ -171,7 +160,6 @@ några fler för det fanns inga.*/
     }
     private void RemoveAnimal()
     {
-        System.out.println("  Remove animal");
         ViewAnimals();
         int userInput = AskForInt("Please enter the ID of the animal to remove: ");
         for(int i = 0;i<listOfAnimals.size();i++)
@@ -189,7 +177,6 @@ några fler för det fanns inga.*/
     }
     private void RemoveCrop()
     {
-        System.out.println("  Remove crop");
         ViewCrops();
         int userInput = AskForInt("Please enter the ID of the crop to remove: ");
         for(int i = 0;i<listOfCrops.size();i++)
@@ -210,10 +197,8 @@ några fler för det fanns inga.*/
     // Add Crop - The quick and easy versions
     private void AddCrop(int id, String name, String typeOfCrop, int amountOfCrop)
     {
-
         Crop newCrop = new Crop(id, name, typeOfCrop, amountOfCrop);
         listOfCrops.add(newCrop);
-
     }
 
 
@@ -235,7 +220,6 @@ några fler för det fanns inga.*/
         // Step 3b - Add a new crop into list, along with the amount
         // /////////
 
-        System.out.println("  Add crop");
 
         // //////
         // Step 1 - Ask user which crop and how much
@@ -269,8 +253,8 @@ några fler för det fanns inga.*/
             }
         }
 
-
-        // Step 3 (a and b)
+        // ////////////////
+        // Step 3 (a and b) - refill existing crop or add a new one
         if(foundCrop > -1) // Step 3a - Fill up the existing crop with the given amount.
         {
             int newQuantity = listOfCrops.get(foundCrop).getQuantity() + inputCropQuantity;
@@ -288,17 +272,12 @@ några fler för det fanns inga.*/
             System.out.println("A new crop, " + inputCropType + ", have been added.");
         }
 
-
-
-
     } // AddCropMenu()
 
 
 
     private void AddAnimalMenu()
     {
-        System.out.println("  Add animal");
-
         int foundAnimal = -1;
         String inputName = "";
         String inputAnimalType = "";
