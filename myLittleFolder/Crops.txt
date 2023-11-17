@@ -2,3 +2,5 @@
 2,Nuts,Walnuts,60
 3,Meat,Dragon T-bone steak,44
 7,Beans,Beans,123
+10,junk-food,pizza,12
+12,junk-food,hot dog,1

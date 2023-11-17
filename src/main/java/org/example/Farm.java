@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Farm
@@ -9,7 +10,7 @@ public class Farm
     // ////////////////////////////////////////////
     // This is the text that goes into the menus.
     String mainMenu = "1 View crops\n2 Add crop\n3 Remove crop\n4 View animals\n5 Add animal\n6 Remove animal\n7 Feed animal\n8 Save\n0 Exit";
-    boolean animalAdded = false;
+
     int nextID;
 
     // /////////////////////////////////////
@@ -88,7 +89,7 @@ public class Farm
             switch(userInput)
             {
                 case 1: System.out.println("  View crops");   ViewCrops(); break;
-                case 2: System.out.println("  Add crop");     AddCropMenu(); break;
+                case 2: System.out.println("  Add crop");     AddCrop(); break;
                 case 3: System.out.println("  Remove crop");  RemoveCrop(); break;
                 case 4: System.out.println("  View animals"); ViewAnimals(); break;
                 case 5: System.out.println("  Add animal");   AddAnimalMenu(); break;
@@ -119,89 +120,34 @@ några fler för det fanns inga.*/
     {
         System.out.println("\n\n  Feeding an animal\n");
 
-        int listIndexCrop = -1;     // The index (in the arraylist) of the
-        int listIndexAnimal = -1;   //  crop and animal respectively.
         Crop selectedCrop = null;
         Animal selectedAnimal = null;
-        int userInput = 0;          // User-input is being stored here
         int selectedCropID;
         int selectedAnimalID;
 
 
-        ViewAnimals();
         // Let's find that crop - and exit if there's no crop left, or if the user is being silly
+        ViewCrops();
         selectedCropID = AskForInt("Pick a crop by its ID: ");
 
         // Check if the ID exists
         for(Crop c : listOfCrops) {if(c.getId()==selectedCropID){selectedCrop = c; } }
-        if(selectedCrop.equals(null)) {System.out.println("\nNo crop with that ID exists.\n\n"); return;}
+        if(selectedCrop == null) {System.out.println("\nNo crop with that ID exists.\n\n"); return;}
 
 
         // Let's pick the animal - and exit if the user is not cooperating
+        ViewAnimals();
         selectedAnimalID = AskForInt("Pick an animal by its ID: ");
 
         // Check if the ID exists
         for(Animal a : listOfAnimals) {if(a.getId()==selectedAnimalID){selectedAnimal = a; } }
-        if(selectedAnimal.equals(null)){System.out.println("\nNo animal with that ID exists.\n\n"); return;}
+        if(selectedAnimal == null){System.out.println("\nNo animal with that ID exists.\n\n"); return;}
 
 
         //If we're here, then we have everything we need to attempt to feed an animal
         selectedAnimal.feed(selectedCrop);
 
     }
-
-
-
-
-    //////////////////////////////////////////////////////
-    /*    private void FeedAnimal(int listIndexCrop, int listIndexAnimal)
-    {
-        int amountOfCrop = listOfCrops.get(listIndexCrop).getQuantity(); // This variable will help declutter the code for decreasing the feed
-        if(amountOfCrop < 1) {System.out.println("\nThat particular feed is out of stock.\n\n"); return;}
-
-        System.out.println("\nThe " + listOfAnimals.get(listIndexAnimal).getSpecies() + " ate some " + listOfCrops.get(listIndexCrop).getCropType() + ".\n\n");
-        listOfCrops.get(listIndexCrop).setQuantity(amountOfCrop - 1);
-    }
-
-
-    private void FeedAnimalMenu()
-    {
-        // This function gathers information from the user, which is used in a call to
-        //  the FeedAnimal(int, int) function.
-
-        System.out.println("\n\nFeeding an animal:\n" +
-                "You'll need to pick a crop and an animal using their ID.\n" +
-                "(Make use of the View-functions in the main menu)");
-
-        int listIndexCrop = -1;     // The index (in the arraylist) of the
-        int listIndexAnimal = -1;   //  crop and animal respectively.
-        int userInput = 0;          // User-input is being stored here
-
-
-        ViewAnimals();
-        // Let's find that crop - and exit if there's no crop left, or if the user is being silly
-        userInput = AskForInt("Pick a crop by its ID: ");
-
-        // Check if the ID exists
-        for(int i = 0;i<listOfCrops.size();i++){if(listOfCrops.get(i).getId()==userInput){listIndexCrop = i;}}
-        if(listIndexCrop == -1) {System.out.println("\nNo crop with that ID exists.\n\n"); return;}
-
-
-        // Let's pick the animal - and exit if the user is not cooperating
-        userInput = AskForInt("Pick an animal by its ID: ");
-
-        // Check if the ID exists
-        for(int i = 0;i<listOfAnimals.size();i++){if(listOfAnimals.get(i).getId()==userInput){listIndexAnimal = i;}}
-        if(listIndexAnimal==-1){System.out.println("\nNo animal with that ID exists.\n\n"); return;}
-
-
-        //If we're here, then we have everything we need to attempt to feed an animal
-        FeedAnimal(listIndexCrop, listIndexAnimal);
-
-    }*/
-    //////////////////////////////////////////////////////
-
-
 
 
     private void RemoveAnimal()
@@ -232,6 +178,7 @@ några fler för det fanns inga.*/
                 System.out.print("Removing " + listOfCrops.get(i).getCropType() + "... ");
                 listOfCrops.remove(i);
                 System.out.println("Done.\n");
+                InitializeNextID();         // Sets the nextID to the highest + 1
                 return;
             }
         }
@@ -249,7 +196,7 @@ några fler för det fanns inga.*/
 
 
     // Add Crop - The interactive version
-    private void AddCropMenu()
+    private void AddCrop()
     {
         int foundCrop = -1;
         int inputID = -1;
@@ -270,12 +217,14 @@ några fler för det fanns inga.*/
         // //////
         // Step 1 - Ask user which crop and how much
         inputCropType = AskForString("Name a new crop to be added or \nenter the ID of an existing crop to increase: ");     // Ask which crop
-        if(inputCropType==""){return;}                         // Fail. User gave no answer.
-        try{inputID=Integer.parseInt(inputCropType);}   // Let's try to convert this string to an int.
-        catch(Exception e){inputID=-1;}                              // Fail. The string doesn't contain a number.
 
-        inputCropQuantity= AskForInt("Enter amount: ");     // Ask how much
-        if(inputCropQuantity < 1) {return;}                    // Fail. User is a comedian.
+        if(inputCropType.isEmpty()){return;}                        // Fail. User gave no answer.
+
+        try{inputID=Integer.parseInt(inputCropType);}               // Let's try to convert this string to an int.
+        catch(Exception e){DoNothing();}                            // The string doesn't contain a number, which means that the user want to add a new crop.
+
+        inputCropQuantity= AskForInt("Enter amount: ");             // Ask how much
+        if(inputCropQuantity < 1) {return;}                         // Fail. The user is a comedian.
 
 
         // //////
@@ -305,17 +254,17 @@ några fler för det fanns inga.*/
         {
             int newQuantity = listOfCrops.get(foundCrop).getQuantity() + inputCropQuantity;
             listOfCrops.get(foundCrop).setQuantity(newQuantity);
-            System.out.println("The amount of " + inputCropType + " have been set to " + inputCropQuantity);
+            System.out.println("The amount of " + listOfCrops.get(foundCrop).getCropType() + " have been set to " + inputCropQuantity);
         }
         else // Step 3b - Add new crop into list, along with the amount.
         {
             inputName = AskForString("What type of crop is this?\n(seed, grass, peas, fruit ...)");
-            if(inputName==""){ return;} // Fail. User gave no answer.
+            if(inputName.isEmpty()){ return;} // Fail. User gave no answer.
 
             IncrementNextID();
             Crop newCrop = new Crop(nextID, inputName, inputCropType, inputCropQuantity);
             listOfCrops.add(newCrop);
-            System.out.println("A new crop, " + inputCropType + ", have been added.");
+            System.out.println("A new crop, '" + inputCropType + "', have been added.");
         }
 
     } // AddCropMenu()
@@ -331,10 +280,10 @@ några fler för det fanns inga.*/
         ViewAnimals();
 
         inputAnimalType= AskForString("Name the Animal: ");     // Ask which Animal
-        if(inputAnimalType==""){return;}                         // Fail. User gave no answer.
+        if(inputAnimalType.isEmpty()){return;}                         // Fail. User gave no answer.
 
         inputName = AskForString("What type of Animal is this?\n(cattle, bird, pet, pest ...)");
-        if(inputName==""){return;} // Fail. User gave no answer.
+        if(inputName.isEmpty()){return;} // Fail. User gave no answer.
 
         IncrementNextID();
         Animal newAnimal = new Animal(nextID, inputName, inputAnimalType);
@@ -366,27 +315,27 @@ några fler för det fanns inga.*/
 
     // Functions for User input below
 
-    private String AskForString(String prompt)
+    private String AskForString(String message)
     {
         String returnValue = "";
-        System.out.println("\n" + prompt);
+        System.out.println("\n" + message);
         Scanner sc = new Scanner(System.in);
         returnValue = sc.nextLine().trim();
 
-        if(returnValue==""){System.out.println("No answer was given.");}
+        if(returnValue.isEmpty()){System.out.println("No answer was given.");}
 
         return returnValue;
     }
 
-    private int AskForInt(String prompt)
+    private int AskForInt(String message)
     {
         int returnValue = 0; // default-value set to 0 - just in case the try-block below fails.
-        if(prompt != ""){System.out.print("\n" + prompt);}
+        if(!Objects.equals(message, "")){System.out.print("\n" + message);}
 
         Scanner sc = new Scanner(System.in);
         String inputString = sc.nextLine().trim();
 
-        if(!inputString.equals("")) {
+        if(!inputString.isEmpty()) {
             try {
                 returnValue = Math.abs(Integer.parseInt(inputString));
             } // only positive numbers, please
@@ -425,7 +374,8 @@ några fler för det fanns inga.*/
     {
         if(readCrops)   // Let's read the crops-file
         {
-            System.out.println("\nAdding crops.");
+            printLine2();
+            System.out.println("\nAdding crops:");
             try
             {
                 String currentLine = "";
@@ -437,7 +387,7 @@ några fler för det fanns inga.*/
                 currentLine = brCrops.readLine();   // Should be something like: "1,seed,Sunflower seeds,123"
                 while(currentLine != null)          // Checking if we actually read something (as in not-null).
                 {
-                    if(currentLine != "")           // Checking if we read a non-empty line (as in not "").
+                    if(!currentLine.isEmpty())           // Checking if we read a non-empty line (as in not "").
                     {
                         String[] cropVariables = currentLine.split(",");
                         if(cropVariables.length == 4)   // Checking if we read four values, separated by commas ("1,2,3,4").
@@ -454,7 +404,7 @@ några fler för det fanns inga.*/
                     }
                     currentLine = brCrops.readLine();
                 }
-                System.out.println("");
+                System.out.println();
                 brCrops.close();
             }
             catch (IOException ioException)
@@ -468,7 +418,8 @@ några fler för det fanns inga.*/
         ///////////////////////
         if(readAnimals)
         {
-            System.out.println("Adding animals.");
+            printLine2();
+            System.out.println("Adding animals:");
             try
             {
                 String currentLine = "";
@@ -480,7 +431,7 @@ några fler för det fanns inga.*/
                 currentLine = brAnimals.readLine(); //Should be something like: "1,Cattle,Cow"
                 while(currentLine != null)
                 {
-                    if(currentLine != "")
+                    if(!currentLine.isEmpty())
                     {
                         String[] animalVariables = currentLine.split(",");
                         if(animalVariables.length == 3)
@@ -498,8 +449,9 @@ några fler för det fanns inga.*/
                     }
                     currentLine = brAnimals.readLine();
                 }
-                System.out.println("");
+                System.out.println();
                 brAnimals.close();
+                //printLine2();
             }
             catch (IOException ioException)
             {

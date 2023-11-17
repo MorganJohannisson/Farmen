@@ -3,3 +3,4 @@
 6,Mount,Hippogriff
 8,frog,Kermit
 9,magical creature,Grindylow
+11,monster,troll
